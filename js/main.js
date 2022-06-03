@@ -1,7 +1,8 @@
 let contador = 0;
 let costoTotal = 0;
 let totalEnProductos = 0;
-
+//Arreglo global para almacenar la lista de compras.
+let datos = [];
 
 // document.getElementById modifica etiqueta ID dentro del <body>
 
@@ -115,6 +116,23 @@ localStorage.setItem("productosTotal", totalEnProductos);
 costoTotal += (precio*cantidad);
 total.innerHTML = `$${costoTotal.toFixed(2)}`;
 localStorage.setItem("precioTotal", costoTotal.toFixed(2));
+//id:contador quiere decir que tengo un dato llamado "id" y le asigno el valor de contador
+//Necesito poner el nombre entre comillas porque es un STRING
+
+//JSON
+
+let elemento =`{
+"id": ${contador}, 
+"nombre": "${txtNombre.value}",  
+"cantidad": ${txtNumber.value}, 
+"precio":${precio} 
+}`; //Definición de un objeto
+
+datos.push(JSON.parse(elemento));
+console.log(datos);
+
+
+localStorage.setItem("elementosTabla", JSON.stringify(datos));
 
 
 let tmp = `<tr>
@@ -158,21 +176,37 @@ txtNumber.addEventListener("blur", (event) => {
 window.addEventListener("load", function(){
 
     if (localStorage.getItem("contadorProductos") != null) {
-        contador = parseInt(this.localStorage.getItem("contadorProductos"));
+        contador = parseInt(localStorage.getItem("contadorProductos"));
         document.getElementById("contadorProductos").innerHTML = contador;
 
     }//if contadorProductos
     if (localStorage.getItem("productosTotal")) {
-        totalEnProductos = parseInt(this.localStorage.getItem("productosTotal"));
+        totalEnProductos = parseInt(localStorage.getItem("productosTotal"));
         document.getElementById("productosTotal").innerHTML = totalEnProductos;
 
     }//if productosTotal
     if (localStorage.getItem("precioTotal")){
-        costoTotal = parseFloat(this.localStorage.getItem("precioTotal"));
+        costoTotal = parseFloat(localStorage.getItem("precioTotal"));
         total.innerHTML = costoTotal;
 
     }//if precioTotal
     
+
+    if (localStorage.getItem("elementosTabla")!=null){
+        datos = JSON.parse(localStorage.getItem("elementosTabla"));
+        datos.forEach(element => {
+            cuerpoTabla[0].innerHTML += `<tr>
+            <th scope="row">${element.id}</th>
+            <td>${element.nombre}</td>
+            <td>${element.cantidad}</td>
+            <td>$ ${element.precio}</td>
+            </tr> `;
+            
+        });
+
+    }
+
+
 
 
 // console.log(localStorage.getItem("productosTotal"));
